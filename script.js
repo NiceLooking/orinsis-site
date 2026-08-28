@@ -32,8 +32,10 @@
       chatId: "",    // например: "123456789"
     },
 
-    // Почта для заявок
-    emailEndpoint: "https://formsubmit.co/ajax/orinsiss@yandex.ru",
+    // Почта для заявок.
+    // Здесь стоит личный код FormSubmit вместо открытого адреса —
+    // заявки идут на orinsiss@yandex.ru, но почта не видна в коде сайта (меньше спама).
+    emailEndpoint: "https://formsubmit.co/ajax/1c15f1c8d3971957842c7958f2b64458",
 
     // Если отправка не удалась — открыть WhatsApp, чтобы заявка не потерялась
     fallbackToWhatsApp: true,
