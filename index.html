@@ -443,81 +443,136 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
+  <!-- CONTACTS & ROUTE: no form, no collection of visitor data -->
   <section class="section section--alt" id="contact">
     <div class="container">
       <div class="section__head reveal">
         <div>
-          <span class="eyebrow">Записаться</span>
-          <h2>Контакты</h2>
+          <span class="eyebrow">Как нас найти</span>
+          <h2>Контакты и маршрут</h2>
         </div>
-        <p class="muted">Оставь заявку — ответим и подберём группу по возрасту и уровню.</p>
+        <p class="muted">Посмотри фото-маршрут, открой карту или выбери удобный способ связи — без анкет и регистрации.</p>
       </div>
 
-      <div class="contact">
+      <div class="contact contact--location">
         <div class="contact__left reveal">
-          <div class="contact-card">
-            <div class="contact-card__title">Студия</div>
-            <div class="contact-card__line"><b>Адрес:</b> Волжский, ул. Дружбы 29А</div>
-            <div class="contact-card__line"><b>Телефон:</b> <a href="tel:+79370934199">+7 (937) 093-41-99</a></div>
-            <div class="contact-card__line"><b>WhatsApp:</b> <a href="https://wa.me/79370934199" target="_blank" rel="noopener">написать в WhatsApp</a></div>
-            <div class="contact-card__line"><b>Telegram:</b> <a href="https://t.me/orinsisdance" target="_blank" rel="noopener">@orinsisdance</a></div>
-            <div class="contact-card__line"><b>ВКонтакте:</b> <a href="https://vk.ru/orinsisdance" target="_blank" rel="noopener">vk.ru/orinsisdance</a></div>
-            <div class="contact-card__line muted">Пн–Сб с 16:00 до 21:30, Сб с 12:00</div>
+          <div class="contact-card contact-card--primary">
+            <div class="contact-card__eyebrow">Orinsis Dance Studio</div>
+            <h3 class="contact-card__title">Ждём тебя в студии</h3>
+
+            <div class="contact-detail">
+              <span class="contact-detail__icon" aria-hidden="true">📍</span>
+              <div>
+                <span class="contact-detail__label">Адрес</span>
+                <strong>Волжский, проспект Дружбы, 29А</strong>
+                <span class="contact-detail__meta">18-й микрорайон, цокольный этаж</span>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <span class="contact-detail__icon" aria-hidden="true">🕗</span>
+              <div>
+                <span class="contact-detail__label">Когда мы открыты</span>
+                <strong>Пн–Пт с 16:00 до 21:30</strong>
+                <span class="contact-detail__meta">Суббота — с 12:00, занятия по расписанию</span>
+              </div>
+            </div>
+
+            <div class="contact-detail">
+              <span class="contact-detail__icon" aria-hidden="true">☎</span>
+              <div>
+                <span class="contact-detail__label">Телефон</span>
+                <a class="contact-detail__phone" href="tel:+79370934199">+7 (937) 093-41-99</a>
+              </div>
+            </div>
+
+            <div class="contact-actions" aria-label="Способы связи">
+              <a class="btn btn--primary" href="tel:+79370934199">Позвонить</a>
+              <a class="btn btn--ghost" href="https://t.me/orinsisdance" target="_blank" rel="noopener noreferrer">Telegram</a>
+              <a class="btn btn--ghost" href="https://wa.me/79370934199" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <a class="btn btn--ghost" href="https://vk.ru/orinsisdance" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
+            </div>
           </div>
 
-          <div class="note">
-            <div class="note__title">Orinsis — это атмосфера</div>
-            <div class="note__text">Молодёжный вайб, дисциплина без токсичности и рост каждого ученика. Можно «войти в танцы» с нуля и реально прогрессировать.</div>
+          <div class="privacy-note">
+            <span class="privacy-note__icon" aria-hidden="true">✓</span>
+            <p><strong>Без формы и регистрации.</strong> Имя, телефон и сообщения на этой странице не запрашиваются и никуда автоматически не отправляются.</p>
           </div>
         </div>
 
         <div class="contact__right reveal">
-          <form class="form" id="leadForm" novalidate>
-            <div class="form__title">Оставь заявку</div>
+          <div class="route-card">
+            <div class="route-card__head">
+              <div>
+                <span class="route-card__eyebrow">Фото-маршрут</span>
+                <h3>Как пройти до студии</h3>
+              </div>
+              <div class="route-card__counter" aria-live="polite">
+                <span data-route-current>1</span><span aria-hidden="true"> / </span><span data-route-total>5</span>
+              </div>
+            </div>
 
-            <label class="field">
-              <span>Имя</span>
-              <input name="name" type="text" placeholder="Как к тебе обращаться?" required />
-            </label>
+            <div class="route-carousel" data-route-carousel aria-label="Фото-маршрут до Orinsis Dance Studio">
+              <div class="route-carousel__viewport" data-route-viewport tabindex="0">
+                <figure class="route-slide">
+                  <a href="https://yandex.ru/maps/org/orinsis/19739202454/" target="_blank" rel="noopener noreferrer" aria-label="Открыть Orinsis в Яндекс Картах">
+                    <img src="assets/map-orinsis.png" alt="Схема расположения Orinsis Dance Studio: Волжский, проспект Дружбы, 29А" width="1200" height="760" />
+                  </a>
+                  <figcaption>
+                    <strong>1. Ориентир на карте</strong>
+                    <span>Волжский, проспект Дружбы, 29А · нажми на схему, чтобы открыть карту</span>
+                  </figcaption>
+                </figure>
 
-            <label class="field">
-              <span>Телефон</span>
-              <input name="phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required />
-            </label>
+                <figure class="route-slide route-slide--placeholder">
+                  <img src="assets/route/01.jpg" alt="Общий вид здания на проспекте Дружбы, 29А" loading="lazy" width="1200" height="760" />
+                  <figcaption>
+                    <strong>2. Найди здание</strong>
+                    <span>Здесь будет фотография общего вида здания</span>
+                  </figcaption>
+                </figure>
 
-            <label class="field">
-              <span>Группа / направление</span>
-              <select name="direction">
-                <option>Дети (6–12)</option>
-                <option>Подростки — базовая</option>
-                <option>Подростки — команда</option>
-                <option>LADY (18–50+)</option>
-                <option>HIP HOP 7+ (Арина)</option>
-                <option>HIP HOP 12+ (Арина)</option>
-                <option>LADY STYLE 18+ (Арина)</option>
-                <option>JAZZ FUNK 12+ (Мария)</option>
-                <option>JAZZ FUNK 12+ (Тимур)</option>
-                <option>HIGH HEELS 16+ (Ольга)</option>
-                <option>Команда (ONEM8 / SMB CREW / TVRCH XANTIX)</option>
-                <option>Индивидуальные</option>
-                <option>Свадебные танцы</option>
-              </select>
-            </label>
+                <figure class="route-slide route-slide--placeholder">
+                  <img src="assets/route/02.jpg" alt="Вход в здание, где находится Orinsis Dance Studio" loading="lazy" width="1200" height="760" />
+                  <figcaption>
+                    <strong>3. Подойди ко входу</strong>
+                    <span>Здесь будет фотография нужного входа</span>
+                  </figcaption>
+                </figure>
 
-            <label class="field">
-              <span>Комментарий</span>
-              <textarea name="message" rows="3" placeholder="Например: хочу на пробное в субботу"></textarea>
-            </label>
+                <figure class="route-slide route-slide--placeholder">
+                  <img src="assets/route/03.jpg" alt="Путь внутри здания к Orinsis Dance Studio" loading="lazy" width="1200" height="760" />
+                  <figcaption>
+                    <strong>4. Спустись на цокольный этаж</strong>
+                    <span>Здесь будет фотография пути внутри здания</span>
+                  </figcaption>
+                </figure>
 
-            <button class="btn btn--primary btn--full" type="submit">Отправить заявку</button>
+                <figure class="route-slide route-slide--placeholder">
+                  <img src="assets/route/04.jpg" alt="Дверь Orinsis Dance Studio" loading="lazy" width="1200" height="760" />
+                  <figcaption>
+                    <strong>5. Ты на месте</strong>
+                    <span>Здесь будет фотография двери студии</span>
+                  </figcaption>
+                </figure>
+              </div>
 
-            <p class="form__hint">
-              Нажимая кнопку, ты соглашаешься на обработку своих данных. Заявка откроется в WhatsApp с готовым текстом —
-              останется нажать «Отправить». Удобнее в <a href="https://t.me/orinsisdance" target="_blank" rel="noopener">Telegram</a>
-              или <a href="https://vk.ru/orinsisdance" target="_blank" rel="noopener">ВК</a>? Напиши нам там.
-            </p>
-          </form>
+              <button class="route-carousel__nav route-carousel__nav--prev" type="button" data-route-prev aria-label="Предыдущее фото">‹</button>
+              <button class="route-carousel__nav route-carousel__nav--next" type="button" data-route-next aria-label="Следующее фото">›</button>
+              <div class="route-carousel__dots" data-route-dots role="tablist" aria-label="Выбор фотографии"></div>
+            </div>
+
+            <div class="route-card__footer">
+              <div>
+                <strong>Открыть точный маршрут</strong>
+                <span>Карта загрузится только после твоего нажатия</span>
+              </div>
+              <div class="map-links">
+                <a href="https://yandex.ru/maps/org/orinsis/19739202454/" target="_blank" rel="noopener noreferrer">Яндекс Карты</a>
+                <a href="https://2gis.ru/volzhsky/directions/points/%7C44.790739%2C48.773453%3B70000001087772574" target="_blank" rel="noopener noreferrer">2ГИС</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -544,7 +599,7 @@
 
   <!-- Мобильная плашка CTA -->
   <div class="mobile-cta" id="mobileCta">
-    <a class="btn btn--primary btn--full" href="#contact">Записаться на пробное — 400 ₽</a>
+    <a class="btn btn--primary btn--full" href="#contact">Связаться со студией</a>
   </div>
 
   <button class="to-top" id="toTop" type="button" aria-label="Наверх">↑</button>

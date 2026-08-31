@@ -7,40 +7,6 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ==========================================================
-     КУДА ОТПРАВЛЯЕТСЯ ЗАЯВКА С ФОРМЫ — НАСТРОЙКИ ЗДЕСЬ
-     ==========================================================
-     mode:
-       "whatsapp" — открывает WhatsApp с готовым текстом (работает без настроек)
-       "telegram" — присылает заявку в личные сообщения Telegram через бота
-       "email"    — присылает заявку на почту (сервис FormSubmit / Formspree)
-
-     Телеграм: напиши @BotFather → /newbot → получишь token.
-     Потом напиши своему боту любое сообщение и открой
-     https://api.telegram.org/bot<TOKEN>/getUpdates — там будет твой chat.id.
-
-     Почта (без регистрации): emailEndpoint = "https://formsubmit.co/ajax/твоя@почта.ru"
-     (первую заявку нужно подтвердить по письму от сервиса).
-     ========================================================== */
-  const LEAD_CONFIG = {
-    mode: "email",
-
-    whatsappPhone: "79370934199",
-
-    telegram: {
-      botToken: "",  // например: "7712345678:AAH..."
-      chatId: "",    // например: "123456789"
-    },
-
-    // Почта для заявок.
-    // Здесь стоит личный код FormSubmit вместо открытого адреса —
-    // заявки идут на orinsiss@yandex.ru, но почта не видна в коде сайта (меньше спама).
-    emailEndpoint: "https://formsubmit.co/ajax/1c15f1c8d3971957842c7958f2b64458",
-
-    // Если отправка не удалась — открыть WhatsApp, чтобы заявка не потерялась
-    fallbackToWhatsApp: true,
-  };
-
   /* ---------- Toast ---------- */
   const toast = document.getElementById("toast");
   let toastTimer;
@@ -140,6 +106,7 @@
   const progressBar = document.querySelector("#progress span");
   const toTop = document.getElementById("toTop");
   const mobileCta = document.getElementById("mobileCta");
+  const contactSection = document.getElementById("contact");
   const parallax = document.querySelector("[data-parallax]");
   let ticking = false;
 
@@ -147,10 +114,15 @@
     const y = window.scrollY || 0;
     const max = document.documentElement.scrollHeight - window.innerHeight;
 
+    const contactRect = contactSection ? contactSection.getBoundingClientRect() : null;
+    const contactVisible = Boolean(
+      contactRect && contactRect.top < window.innerHeight * 0.9 && contactRect.bottom > window.innerHeight * 0.1
+    );
+
     if (topbar) topbar.classList.toggle("is-stuck", y > 12);
     if (progressBar) progressBar.style.width = (max > 0 ? (y / max) * 100 : 0) + "%";
-    if (toTop) toTop.classList.toggle("is-visible", y > 600);
-    if (mobileCta) mobileCta.classList.toggle("is-visible", y > 500 && y < max - 260);
+    if (toTop) toTop.classList.toggle("is-visible", y > 600 && !contactVisible);
+    if (mobileCta) mobileCta.classList.toggle("is-visible", y > 500 && y < max - 260 && !contactVisible);
     if (parallax && !reduceMotion && y < window.innerHeight * 1.2) {
       parallax.style.transform = "translate3d(0," + y * 0.18 + "px,0) scale(1.06)";
     }
@@ -418,6 +390,73 @@
     }
   })();
 
+  /* ---------- Фото-маршрут до студии ---------- */
+  (function initRouteCarousel() {
+    const root = document.querySelector("[data-route-carousel]");
+    if (!root) return;
+
+    const viewport = root.querySelector("[data-route-viewport]");
+    const slides = Array.from(root.querySelectorAll(".route-slide"));
+    const prev = root.querySelector("[data-route-prev]");
+    const next = root.querySelector("[data-route-next]");
+    const dotsBox = root.querySelector("[data-route-dots]");
+    const card = root.closest(".route-card");
+    const current = card ? card.querySelector("[data-route-current]") : null;
+    const total = card ? card.querySelector("[data-route-total]") : null;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!viewport || !slides.length) return;
+
+    let index = 0;
+    if (total) total.textContent = String(slides.length);
+
+    const dots = slides.map((slide, i) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", "Шаг " + (i + 1) + " из " + slides.length);
+      dot.setAttribute("aria-selected", i === 0 ? "true" : "false");
+      dot.addEventListener("click", () => goTo(i));
+      if (dotsBox) dotsBox.appendChild(dot);
+      return dot;
+    });
+
+    function setActive(nextIndex) {
+      index = (nextIndex + slides.length) % slides.length;
+      if (current) current.textContent = String(index + 1);
+      dots.forEach((dot, i) => dot.setAttribute("aria-selected", i === index ? "true" : "false"));
+    }
+
+    function goTo(nextIndex) {
+      const target = (nextIndex + slides.length) % slides.length;
+      viewport.scrollTo({
+        left: slides[target].offsetLeft - viewport.offsetLeft,
+        behavior: reduced ? "auto" : "smooth",
+      });
+      setActive(target);
+    }
+
+    if (prev) prev.addEventListener("click", () => goTo(index - 1));
+    if (next) next.addEventListener("click", () => goTo(index + 1));
+    viewport.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") { event.preventDefault(); goTo(index - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); goTo(index + 1); }
+      if (event.key === "Home") { event.preventDefault(); goTo(0); }
+      if (event.key === "End") { event.preventDefault(); goTo(slides.length - 1); }
+    });
+
+    let scrollFrame = null;
+    viewport.addEventListener("scroll", () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = null;
+        const width = viewport.clientWidth || 1;
+        setActive(Math.round(viewport.scrollLeft / width));
+      });
+    }, { passive: true });
+
+    setActive(0);
+  })();
+
   /* ---------- Демо-ссылки ---------- */
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-toast]");
@@ -425,166 +464,4 @@
     e.preventDefault();
     showToast(a.dataset.toast || "Скоро добавим");
   });
-
-  /* ---------- Форма: маска телефона и валидация ---------- */
-  const form = document.getElementById("leadForm");
-  if (form) {
-    const phone = form.querySelector('input[name="phone"]');
-
-    function formatPhone(value) {
-      let digits = value.replace(/\D/g, "");
-      if (digits.startsWith("8")) digits = "7" + digits.slice(1);
-      if (!digits.startsWith("7")) digits = "7" + digits;
-      digits = digits.slice(0, 11);
-      const rest = digits.slice(1);
-      let out = "+7";
-      if (rest.length) out += " (" + rest.slice(0, 3);
-      if (rest.length >= 3) out += ") " + rest.slice(3, 6);
-      if (rest.length >= 6) out += "-" + rest.slice(6, 8);
-      if (rest.length >= 8) out += "-" + rest.slice(8, 10);
-      return out;
-    }
-
-    if (phone) {
-      phone.addEventListener("input", () => {
-        phone.value = formatPhone(phone.value);
-      });
-    }
-
-    function setError(input, message) {
-      const field = input.closest(".field");
-      if (!field) return;
-      let error = field.querySelector(".field__error");
-      if (message) {
-        if (!error) {
-          error = document.createElement("span");
-          error.className = "field__error";
-          field.appendChild(error);
-        }
-        error.textContent = message;
-        field.classList.add("has-error");
-        input.classList.add("is-invalid");
-      } else {
-        field.classList.remove("has-error");
-        input.classList.remove("is-invalid");
-      }
-    }
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = form.querySelector('input[name="name"]');
-      let ok = true;
-
-      if (!name.value.trim() || name.value.trim().length < 2) {
-        setError(name, "Укажи имя — хотя бы 2 символа");
-        ok = false;
-      } else {
-        setError(name, "");
-      }
-
-      const digits = (phone.value || "").replace(/\D/g, "");
-      if (digits.length !== 11) {
-        setError(phone, "Введи телефон полностью: +7 и 10 цифр");
-        ok = false;
-      } else {
-        setError(phone, "");
-      }
-
-      if (!ok) {
-        showToast("Проверь подсвеченные поля 🙌");
-        form.querySelector(".is-invalid").focus();
-        return;
-      }
-
-      const data = new FormData(form);
-      const summary =
-        "Заявка Orinsis\n" +
-        "Имя: " + String(data.get("name") || "").trim() + "\n" +
-        "Телефон: " + String(data.get("phone") || "").trim() + "\n" +
-        "Направление: " + String(data.get("direction") || "").trim() + "\n" +
-        "Комментарий: " + (String(data.get("message") || "").trim() || "-");
-
-      console.log(summary);
-      sendLead(summary, data);
-    });
-
-    function openWhatsApp(summary) {
-      const waUrl =
-        "https://wa.me/" + LEAD_CONFIG.whatsappPhone + "?text=" + encodeURIComponent(summary);
-      window.open(waUrl, "_blank", "noopener");
-      showToast("Открываем WhatsApp — осталось нажать «Отправить» 💕");
-      form.reset();
-    }
-
-    function setSending(state) {
-      const btn = form.querySelector('button[type="submit"]');
-      if (!btn) return;
-      btn.disabled = state;
-      btn.textContent = state ? "Отправляем…" : "Отправить заявку";
-    }
-
-    async function sendLead(summary, data) {
-      const mode = LEAD_CONFIG.mode;
-
-      // Режим WhatsApp — без сервера, открываем чат с готовым текстом
-      if (mode === "whatsapp") {
-        openWhatsApp(summary);
-        return;
-      }
-
-      setSending(true);
-      try {
-        if (mode === "telegram") {
-          const tg = LEAD_CONFIG.telegram;
-          if (!tg.botToken || !tg.chatId) throw new Error("Telegram не настроен");
-          const res = await fetch(
-            "https://api.telegram.org/bot" + tg.botToken + "/sendMessage",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                chat_id: tg.chatId,
-                text: summary,
-                disable_web_page_preview: true,
-              }),
-            }
-          );
-          if (!res.ok) throw new Error("Telegram API " + res.status);
-        } else if (mode === "email") {
-          if (
-            !LEAD_CONFIG.emailEndpoint ||
-            LEAD_CONFIG.emailEndpoint.indexOf("PUT_YOUR_EMAIL_HERE") !== -1
-          ) {
-            throw new Error("Почта не настроена: впиши emailEndpoint в script.js");
-          }
-          const res = await fetch(LEAD_CONFIG.emailEndpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({
-              _subject: "Новая заявка с сайта Orinsis",
-              Имя: String(data.get("name") || "").trim(),
-              Телефон: String(data.get("phone") || "").trim(),
-              Направление: String(data.get("direction") || "").trim(),
-              Комментарий: String(data.get("message") || "").trim() || "-",
-            }),
-          });
-          if (!res.ok) throw new Error("Email " + res.status);
-        } else {
-          throw new Error("Неизвестный режим отправки: " + mode);
-        }
-
-        showToast("Спасибо! Заявка отправлена — свяжемся с тобой 💕");
-        form.reset();
-      } catch (err) {
-        console.error("Не удалось отправить заявку:", err);
-        if (LEAD_CONFIG.fallbackToWhatsApp) {
-          openWhatsApp(summary);
-        } else {
-          showToast("Не получилось отправить — напиши нам в Telegram или WhatsApp");
-        }
-      } finally {
-        setSending(false);
-      }
-    }
-  }
 })();
